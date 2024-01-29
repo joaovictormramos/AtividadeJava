@@ -46,5 +46,6 @@ public class Main {
 				System.out.print("Erro! As datas para reserva devem ser futuras.");
 			}
 		}
+		leitor.close();
 	}
 }
