@@ -1,8 +1,10 @@
-package entities;
+package models.entities;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+
+import models.exceptions.DominioException;
 
 public class Reserva {
 	private Integer numeroQuarto;
@@ -14,11 +16,21 @@ public class Reserva {
 	public Reserva() {
 	}
 
-	public Reserva(Integer numeroQuarto, Date checkIn, Date checkOut) {
-		super();
-		this.numeroQuarto = numeroQuarto;
-		this.checkIn = checkIn;
-		this.checkOut = checkOut;
+	public Reserva(Integer numeroQuarto, Date checkIn, Date checkOut) throws DominioException {
+		Date now = new Date();
+		if (checkIn.before(now) && checkOut.before(now)) {
+			throw new DominioException("Erro! As datas para reserva devem ser futuras.");
+		} else {
+			if (checkOut.before(checkIn)) {
+				throw new DominioException("Erro! Data de check-out anterior ao check-in.");
+			} else {
+				this.checkIn = checkIn;
+				this.checkOut = checkOut;
+				this.numeroQuarto = numeroQuarto;
+				this.checkIn = checkIn;
+				this.checkOut = checkOut;
+			}
+		}
 	}
 
 	public Integer getNumeroQuarto() {
@@ -42,17 +54,16 @@ public class Reserva {
 		return TimeUnit.DAYS.convert(diferenca, TimeUnit.MILLISECONDS);
 	}
 
-	public String atualizarDatas(Date checkIn, Date checkOut) {
+	public void atualizarDatas(Date checkIn, Date checkOut) throws DominioException {
 		Date now = new Date();
 		if (checkIn.before(now) || checkOut.before(now)) {
-			return "Erro! As datas para reserva devem ser futuras.";
+			throw new DominioException("Erro! As datas para reserva devem ser futuras.");
 		} else {
 			if (checkOut.before(checkIn)) {
-				return "Erro! Data de check-out anterior ao check-in.";
+				throw new DominioException("Erro! Data de check-out anterior ao check-in.");
 			} else {
 				this.checkIn = checkIn;
 				this.checkOut = checkOut;
-				return null;
 			}
 		}
 	}

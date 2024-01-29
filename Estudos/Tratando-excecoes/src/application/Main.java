@@ -5,27 +5,20 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
-import entities.Reserva;
+import models.entities.Reserva;
+import models.exceptions.DominioException;
 
 public class Main {
-	public static void main(String[] args) throws ParseException {
-
+	public static void main(String[] args) {
 		Scanner leitor = new Scanner(System.in);
 		SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy");
-
-		System.out.print("Número do quarto: ");
-		int numeroQuarto = leitor.nextInt();
-		System.out.print("Data de check-in (dia/mês/ano): ");
-		Date checkIn = sdf1.parse(leitor.next());
-		System.out.print("Data de check-out (dia/mês/ano): ");
-		Date checkOut = sdf1.parse(leitor.next());
-		Date now = new Date();
-
-		if (checkOut.before(checkIn)) {
-			System.out.print("Erro! Data de check-out anterior ao check-in.");
-		} else if (checkOut.before(now) || checkIn.before(now)) {
-			System.out.print("Erro! As datas para reserva devem ser futuras.");
-		} else {
+		try {
+			System.out.print("Número do quarto: ");
+			int numeroQuarto = leitor.nextInt();
+			System.out.print("Data de check-in (dia/mês/ano): ");
+			Date checkIn = sdf1.parse(leitor.next());
+			System.out.print("Data de check-out (dia/mês/ano): ");
+			Date checkOut = sdf1.parse(leitor.next());
 			Reserva reserva = new Reserva(numeroQuarto, checkIn, checkOut);
 			System.out.print("Reserva: " + reserva);
 			System.out.println();
@@ -34,13 +27,14 @@ public class Main {
 			checkIn = sdf1.parse(leitor.next());
 			System.out.print("Data de check-out (dia/mês/ano): ");
 			checkOut = sdf1.parse(leitor.next());
-
-			String erro = reserva.atualizarDatas(checkIn, checkOut);
-			if (erro != null) {
-				System.out.print(erro);
-			} else {
-				reserva.atualizarDatas(checkIn, checkOut);
-			}
+			reserva.atualizarDatas(checkIn, checkOut);
+			System.out.print("Reserva: " + reserva);
+		} catch (ParseException e) {
+			System.out.print("Data inválida.");
+		} catch (DominioException e) {
+			System.out.print(e.getMessage());
+		} catch (RuntimeException e) {
+			System.out.print("Erro inesperado.");
 		}
 		leitor.close();
 	}
