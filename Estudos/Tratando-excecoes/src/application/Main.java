@@ -35,15 +35,11 @@ public class Main {
 			System.out.print("Data de check-out (dia/mês/ano): ");
 			checkOut = sdf1.parse(leitor.next());
 
-			if (!checkIn.before(now) || !checkOut.before(now)) {
-				if (checkOut.before(checkIn)) {
-					System.out.print("Erro! Data de check-out anterior ao check-in.");
-				} else {
-					reserva.atualizarDatas(checkIn, checkOut);
-					System.out.print("Reserva: " + reserva);
-				}
+			String erro = reserva.atualizarDatas(checkIn, checkOut);
+			if (erro != null) {
+				System.out.print(erro);
 			} else {
-				System.out.print("Erro! As datas para reserva devem ser futuras.");
+				reserva.atualizarDatas(checkIn, checkOut);
 			}
 		}
 		leitor.close();

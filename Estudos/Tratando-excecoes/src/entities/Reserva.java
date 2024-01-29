@@ -8,8 +8,8 @@ public class Reserva {
 	private Integer numeroQuarto;
 	private Date checkIn;
 	private Date checkOut;
-	
-	private static SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy"); 
+
+	private static SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy");
 
 	public Reserva() {
 	}
@@ -42,17 +42,25 @@ public class Reserva {
 		return TimeUnit.DAYS.convert(diferenca, TimeUnit.MILLISECONDS);
 	}
 
-	public void atualizarDatas(Date checkIn, Date checkOut) {
-		this.checkIn = checkIn;
-		this.checkOut = checkOut;
+	public String atualizarDatas(Date checkIn, Date checkOut) {
+		Date now = new Date();
+		if (checkIn.before(now) || checkOut.before(now)) {
+			return "Erro! As datas para reserva devem ser futuras.";
+		} else {
+			if (checkOut.before(checkIn)) {
+				return "Erro! Data de check-out anterior ao check-in.";
+			} else {
+				this.checkIn = checkIn;
+				this.checkOut = checkOut;
+				return null;
+			}
+		}
 	}
 
 	@Override
 	public String toString() {
-		return "Quarto " + getNumeroQuarto()
-		+ ", Check-In: " + sdf1.format(getCheckIn())
-		+ ", Check-out: " + sdf1.format(getCheckOut())
-		+ ", " + duration() + " noites.";
+		return "Quarto " + getNumeroQuarto() + ", Check-In: " + sdf1.format(getCheckIn()) + ", Check-out: "
+				+ sdf1.format(getCheckOut()) + ", " + duration() + " noites.";
 	}
 
 }
